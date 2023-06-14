@@ -4,44 +4,84 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-
 <div class="container">
     <div class="row">
         <div class="=col-md-12">
             <h2>Super Digito</h2>
         </div>
     </div>
-
-     @using (Html.BeginForm("Historial", "Historial", FormMethod.Post, new { enctype = "multipart/form-data" }))
+      <div class="container-fluid">
+     @using (Html.BeginForm("Agregar", "Historial", FormMethod.Post, new { enctype = "multipart/form-data" }))
             {
-                <div class="row">
-                    <div class="col-md-4 col-6 col-sm-6">
+                 <div hidden>
+                      <div hidden>
+                        @Html.LabelFor(model => model.Usuario.IdUsuario)
+                        @Html.TextBoxFor(model => model.Usuario.IdUsuario, new { @class = "form-control", @id = "Numero" })
+                        @Html.ValidationMessageFor(model => model.Usuario.IdUsuario)
+                    </div>
+                 </div>
+
+              <div class="row">
+                   <div class="form-group">
+                    <div class="col-md-4">
                         @Html.LabelFor(model => model.Numero)
-                        @Html.TextBoxFor(model => model.Numero, new { @class = "form-control", @id = "Numero" })
+                        @Html.TextBoxFor(model => model.Numero, new { @class = "form-control", @id = "Numero", @onchange="Calcular()" })
                         @Html.ValidationMessageFor(model => model.Numero)
                     </div>
                      <hr />
-                    <div class="col-md-4 col-6 col-sm-6">
+                    <div class="col-md-4">
                         @Html.LabelFor(model => model.Resultado)
                         @Html.TextBoxFor(model => model.Resultado, new { @class = "form-control", @id = "resultado", @readonly = true })
                         @Html.ValidationMessageFor(model => model.Resultado)
 
                     </div>
                 </div>
-    
-    <div class="row">
-        <div class="col-md-1 ">
-             <button class="bg-info" onclick="Calcular()">Agregar</button>
-            @*Html.ActionLink("Agregar", "Form", "", htmlAttributes: new { @class = "btn btn-success" })*@
-        </div>
-        <br> <br />
-    </div>
-    }
+            </div>
+                <div class="row">
+                    <div class="col-md-1 ">
+                         <input type="submit" value="Guardar" class="btn btn-success" />
+                    </div>
+                    <br> <br />
+                </div>
+             
+    @if(Model.Hitoriales != null){
+
     <div class="row">
         <div class="col-lg-12">
             <table class="table table-bordered table-responsive">
                 <thead class="thead-dark">
                     <tr>
+                          <td hidden>IdUsuario</td>
+                        <td>Numero</td>
+                        <td>Resultado</td>
+                        <td>FechaHora</td>
+                    </tr>
+                </thead>
+                <tbody>
+                   @foreach (ML.Historial historial in Model.Hitoriales)
+                    {
+                        <tr>
+                            <td hidden>@historial.Usuario.IdUsuario</td>
+                            <td>@historial.Numero</td>
+                            <td>@historial.Resultado</td>
+                            <td>@historial.FechaHora</td>
+                         </tr>
+                    }
+                </tbody>
+            </table>
+              <a class="btn btn-danger glyphicon glyphicon-trash " href="@Url.Action("Delete", "Historial", new { idUsuario = Model.Usuario.IdUsuario })">Eliminar</a>
+                       
+        </div>
+    </div>
+    }
+    else{
+        
+    <div class="row">
+        <div class="col-lg-12">
+            <table class="table table-bordered table-responsive">
+                <thead class="thead-dark">
+                    <tr>
+                          <td hidden>IdUsuario</td>
                         <td>Numero</td>
                         <td>Resultado</td>
                         <td>FechaHora</td>
@@ -49,26 +89,23 @@
                     </tr>
                 </thead>
                 <tbody>
-                   @* @foreach (ML.Historial cine in Model.Hitoriales)
-                    {
-                        <tr>
-                            <td class="hidden">@cine.Usuario.IdUsuario</td>
-                            <td>@cine.Numero</td>
-                            <td>@cine.Resultado</td>
-                            <td>@cine.FechaHora</td>
-                            <td><a class="btn btn-danger glyphicon glyphicon-trash " href="@Url.Action("Delete", "Historial", new { idUsuario = cine.Usuario.IdUsuario  })" onclick="return confirm('¿Estas seguro que deseas eliminar este registro?');"></a></td>
-                        </tr>
-                    }*@
                 </tbody>
-            </table>
+           </table>
         </div>
     </div>
 
-</div>
-
+    }
+    }
+ </div>
+   
+@section Scripts
+{
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
 <script>
     function Calcular()
  {
+      numero: $('#Numero').val()
      
     while (numero >= 10) {
         numero = numero.toString()
@@ -76,8 +113,8 @@
             .map(x => parseInt(x) )
             .reduce( (x, y) => x + y);
     }
-     $('#' + resultado).text(numero);
+    $('#resultado').text(numero)
  }
 </script>
-
+}
 

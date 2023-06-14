@@ -169,5 +169,40 @@ namespace BL
             }
             return result;
         }
+
+
+        public static ML.Result Calcular(ML.Historial historial)
+        {
+            ML.Result result = new ML.Result();
+            try
+            {
+                int n = historial.Numero;
+                int sum = 0;
+                if (n > 0)
+                {
+                    while (n > 0 || sum > 9)
+                    {
+                        if (n == 0)
+                        {
+                            n = sum;
+                            sum = 0;
+                        }
+                        sum += n % 10;
+                        n /= 10;
+                    }
+
+                }
+                result.Correct = true;
+                result.Resultado = sum;
+
+            }
+            catch (Exception ex)
+            {
+                result.Correct = false;
+                result.ErrorMessage = ex.Message;
+                result.Ex = ex;
+            }
+            return result;
+        }
     }
 }
